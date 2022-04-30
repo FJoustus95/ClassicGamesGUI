@@ -7,9 +7,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
+import javax.swing.*;
 
 public final class Damas extends JPanel implements ActionListener, MouseListener {
 	private static final long VersionSerial = 1L; 
@@ -29,8 +27,8 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
         
         //Valores para los datos del juego
         
-	public static final int EMPTY = 0, RED = 1, RED_KING = 2, WHITE = 3, WHITE_KING = 4; 
-        public static JFrame frame;
+	public static final int EMPTY = 0, RED = 1, RED_KING = 2, BLACK = 3, BLACK_KING = 4; 
+        public static JFrame background;
 	public boolean gameInProgress = true;
 	public int currentPlayer = RED;
 	
@@ -54,22 +52,26 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	}
 	
 	public Damas(){
+            
 		window(ancho, alto, this);
 		initializeBoard();
-		repaint(); // This is included in the JVM. Runs paint.
+                // Esto está incluido en la JVM. Ejecuta pintar
+		repaint(); 
 	}
 	
-	public boolean gameOver(){ //Wrapper for gameOverInternal
+        //Envoltura para el gameOver Interno
+	public boolean gameOver(){ 
 		return gameOverInternal(0, 0, 0, 0);
 	}
 	
-	public boolean gameOverInternal(int col, int row, int red, int white){ //recursive practice
+        //practica recursiva
+	public boolean gameOverInternal(int col, int row, int cyan, int white){ 
 		if(gameData[col][row] == RED || gameData[col][row] == RED_KING)
-			red += 1;
-		if(gameData[col][row] == WHITE || gameData[col][row] == WHITE_KING)
+			cyan += 1;
+		if(gameData[col][row] == BLACK || gameData[col][row] == BLACK_KING)
 			white += 1;
 		if(col == numTilesPerRow-1 && row == numTilesPerRow-1){
-			if(red == 0 || white == 0)
+			if(cyan  == 0 || white == 0)
 				return true;
 			else return false;
 		}
@@ -77,34 +79,45 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 			row += 1;
 			col = -1;
 		}
-		return gameOverInternal(col+1, row, red, white);
+		return gameOverInternal(col+1, row, cyan, white);
 	}
+        
+            
         
 	//Dibujar el JFrame y agregar la funcion de Salida
 	public void window(int width, int height, Damas game){ 
-		JFrame frame = new JFrame();
-		frame.setSize(width, height);
-		frame.setBackground(Color.cyan);
-		frame.setLocationRelativeTo(null);
-		frame.pack();
-		Insets insets = frame.getInsets();
+		
+                JFrame background = new JFrame();
+                background.setTitle("Juego de shovel Damas");
+                background.setVisible(true);
+		background.setSize(790, 537);
+		
+		background.setLocationRelativeTo(null);
+		background.pack();
+		Insets insets = background.getInsets();
 		int frameLeftBorder = insets.left;
 		int frameRightBorder = insets.right;
 		int frameTopBorder = insets.top;
 		int frameBottomBorder = insets.bottom;
-		frame.setPreferredSize(new Dimension(width + frameLeftBorder + frameRightBorder, height + frameBottomBorder + frameTopBorder));
-		frame.setMaximumSize(new Dimension(width + frameLeftBorder + frameRightBorder, height + frameBottomBorder + frameTopBorder));
-		frame.setMinimumSize(new Dimension(width + frameLeftBorder + frameRightBorder, height + frameBottomBorder + frameTopBorder));
-		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.addMouseListener(this);
-		frame.requestFocus();
-		frame.setVisible(true);
-		frame.add(game);
-	}
+		background.setPreferredSize(new Dimension(790 + frameLeftBorder + frameRightBorder, 537 + frameBottomBorder + frameTopBorder));
+		background.setMaximumSize(new Dimension(790 + frameLeftBorder + frameRightBorder, 537 + frameBottomBorder + frameTopBorder));
+		background.setMinimumSize(new Dimension(790 + frameLeftBorder + frameRightBorder, 537 + frameBottomBorder + frameTopBorder));
+		
+		background.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                
+                
+		background.addMouseListener(this);
+		background.requestFocus();
+		
 	
+                background.add(game);
+                background.setLocationRelativeTo((Component)null);
+               
+        }
+	
+       
 	public void initializeBoard(){
-		//UPDATE THE STARTING POSITIONS
+		//Actualizar las posiciones de Inicio
 				for(int col=0; col < (numTilesPerRow); col+=2){
 					gameData[col][5] = RED;
 					gameData[col][7] = RED;
@@ -112,13 +125,13 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 				for(int col=1; col < (numTilesPerRow); col+=2)
 					gameData[col][6] = RED;
 				for(int col=1; col < (numTilesPerRow); col+=2){
-					gameData[col][0] = WHITE;
-					gameData[col][2] = WHITE;
+					gameData[col][0] = BLACK;
+					gameData[col][2] = BLACK;
 				}	
 				for(int col=0; col < (numTilesPerRow); col+=2)
-					gameData[col][1] = WHITE;
+					gameData[col][1] = BLACK;
 	}
-	
+	//metodo que dibuja las piezas
 	public static void drawPiece(int col, int row, Graphics g, Color color){
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	    ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -137,7 +150,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		
                 for(int row = 0; row < numTilesPerRow; row++){
 			for(int col = 0; col < numTilesPerRow; col++){
-				if((row%2 == 0 && col%2 == 0) || (row%2 != 0 && col%2 != 0)){ // This assigns the checkerboard pattern
+				if((row%2 == 0 && col%2 == 0) || (row%2 != 0 && col%2 != 0)){ // Esto asigna el patrón del tablero
 					baseGameData[col][row] = 0;
 					g.setColor(goldShovel);
 					g.fillRect(col*tamañoMosaico, row*tamañoMosaico, tamañoMosaico, tamañoMosaico);
@@ -155,10 +168,10 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		 		g.setColor(Color.MAGENTA.darker());
 					g.fillRect(col*tamañoMosaico, row*tamañoMosaico, tamañoMosaico, tamañoMosaico);
 				}
-				if(gameData[col][row] == WHITE)
-					drawPiece(col, row, g, Color.white);
-				else if(gameData[col][row] == WHITE_KING){
-					drawPiece(col, row, g, Color.white);
+				if(gameData[col][row] == BLACK)
+					drawPiece(col, row, g, Color.black);
+				else if(gameData[col][row] == BLACK_KING){
+					drawPiece(col, row, g, Color.black);
 					g.drawImage(crownImage, (col*tamañoMosaico)+6, (row*tamañoMosaico)+6, tamañoMosaico-12, tamañoMosaico-12, null);
 				}
 				else if(gameData[col][row] == RED)
@@ -172,8 +185,8 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		if(gameOver() == true)
 			gameOverDisplay(g);
 	}	
-	
-	public void gameOverDisplay(Graphics g) { //Displays the game over message
+	//Lanza el mensaje de game Over
+	public void gameOverDisplay(Graphics g) { 
 		 String msg = "Game Over";
 	     Font small = new Font("Helvetica", Font.BOLD, 20);
 	     FontMetrics metr = getFontMetrics(small);
@@ -194,7 +207,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		}
 		repaint();
 	}
-	
+	//metodo que detecta el click del mouse
         @Override
 	public void mousePressed(java.awt.event.MouseEvent evt) {
     	int col = (evt.getX()-8) / tamañoMosaico; // 8 is left frame length
@@ -215,7 +228,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	
 	public void swapPlayer(){
 		if(currentPlayer == RED)
-			currentPlayer = WHITE;
+			currentPlayer = BLACK;
 		else currentPlayer = RED;
 	}
 	
@@ -231,7 +244,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	}
 	
 	public boolean isKing(int col, int row){
-		if(gameData[col][row] == RED_KING || gameData[col][row] == WHITE_KING){
+		if(gameData[col][row] == RED_KING || gameData[col][row] == BLACK_KING){
 			return true;
 		}
 		else return false;
@@ -239,7 +252,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	
 	public int checkOpponent(int col, int row){
 		if(gameData[col][row] == RED || gameData[col][row] ==  RED_KING)
-			return WHITE;
+			return BLACK;
 		else
 			return RED;
 	}
@@ -265,8 +278,8 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	public void checkKing(int col, int row){
 		if(gameData[col][row] == RED && row == 0)
 			gameData[col][row] = RED_KING;
-		else if(gameData[col][row] == WHITE && row == numTilesPerRow-1)
-			gameData[col][row] = WHITE_KING;
+		else if(gameData[col][row] == BLACK && row == numTilesPerRow-1)
+			gameData[col][row] = BLACK_KING;
 		else return;
 	}
 	
@@ -298,10 +311,10 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 			if(gameData[col][row] == RED){  // only goes north, checks the row above it's own
 				getUp(col, row);
 			}
-			if(gameData[col][row] == WHITE){ // only goes south, checks the row below it's own
+			if(gameData[col][row] == BLACK){ // only goes south, checks the row below it's own
 				getDown(col, row);
 			}
-			if(gameData[col][row] == RED_KING || gameData[col][row] == WHITE_KING){ // Goes up OR down 1 row below it's own
+			if(gameData[col][row] == RED_KING || gameData[col][row] == BLACK_KING){ // Goes up OR down 1 row below it's own
 				getUp(col, row);
 			  //getUp(col, row);
 				getDown(col, row); // GET UP GET UP AND GET DOWN
@@ -393,7 +406,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	public boolean checkTeamPiece(int col, int row){
 		if(currentPlayer == RED && (gameData[col][row] == RED || gameData[col][row] == RED_KING)) //bottom
 			return true;
-		if(currentPlayer == WHITE && (gameData[col][row] == WHITE || gameData[col][row] == WHITE_KING)) //top
+		if(currentPlayer == BLACK && (gameData[col][row] == BLACK || gameData[col][row] == BLACK_KING)) //top
 			return true;
 		else
 			return false;
@@ -409,7 +422,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		//Steps for checking if canJump is true: determine piece within movement. Then check if its an opponent piece, then if the space behind it is empty
 		//and in bounds
 		// 4 conditions based on column and row relations to the other piece
-		if(((gameData[col][row] == WHITE || gameData[col][row] == WHITE_KING) && (gameData[opponentCol][opponentRow] == RED || gameData[opponentCol][opponentRow] == RED_KING)) || (gameData[col][row] == RED || gameData[col][row] == RED_KING) && (gameData[opponentCol][opponentRow] == WHITE || gameData[opponentCol][opponentRow] == WHITE_KING)){ 
+		if(((gameData[col][row] == BLACK || gameData[col][row] == BLACK_KING) && (gameData[opponentCol][opponentRow] == RED || gameData[opponentCol][opponentRow] == RED_KING)) || (gameData[col][row] == RED || gameData[col][row] == RED_KING) && (gameData[opponentCol][opponentRow] == BLACK || gameData[opponentCol][opponentRow] == BLACK_KING)){ 
 			//If the piece is white/red and opponent piece is opposite TODO fix this if. It's so ugly
 			if(opponentCol == 0 || opponentCol == numTilesPerRow-1 || opponentRow == 0 || opponentRow == numTilesPerRow-1)
 				return false;
@@ -434,7 +447,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		else
 			return new int[] {col+2, row+2};
 	}
-	
+
 	// Methods that must be included for some reason? WHY
         @Override
 	public void mouseClicked(MouseEvent e) {}
