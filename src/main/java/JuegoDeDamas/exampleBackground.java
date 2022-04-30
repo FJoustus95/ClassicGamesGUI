@@ -4,7 +4,7 @@ package JuegoDeDamas;
 import javax.swing.*;
 
 
-
+//ejemplo para poner un jpanel con un background (imagen)
 public class exampleBackground extends JFrame {
     
     JPanel jPanel = new JPanel();
