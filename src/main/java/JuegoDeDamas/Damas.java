@@ -28,6 +28,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	public static int[][] gameData = new int[numTilesPerRow][numTilesPerRow];
         
         //Valores para los datos del juego
+        
 	public static final int EMPTY = 0, RED = 1, RED_KING = 2, WHITE = 3, WHITE_KING = 4; 
         public static JFrame frame;
 	public boolean gameInProgress = true;
@@ -46,7 +47,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		try {
 			crownImage = ImageIO.read(new File("crown.png"));
 		} catch (IOException e) {
-                    // TODO Auto-generated catch block
+                    // Bloqueo autogenerado
 
 		}
 		new Damas();
@@ -78,8 +79,9 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		}
 		return gameOverInternal(col+1, row, red, white);
 	}
-	
-	public void window(int width, int height, Damas game){ //draw the frame and add exit functionality
+        
+	//Dibujar el JFrame y agregar la funcion de Salida
+	public void window(int width, int height, Damas game){ 
 		JFrame frame = new JFrame();
 		frame.setSize(width, height);
 		frame.setBackground(Color.cyan);
