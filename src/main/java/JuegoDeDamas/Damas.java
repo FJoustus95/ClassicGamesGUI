@@ -195,6 +195,7 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	     g.drawString(msg, (ancho - metr.stringWidth(msg)) / 2, ancho / 2);
 	}
 	
+        //metodo para resetear el Juego
 	public void resetPlay(){
 		storedCol = 0;
 		storedRow = 0;
