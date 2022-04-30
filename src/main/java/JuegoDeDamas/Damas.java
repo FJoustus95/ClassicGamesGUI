@@ -1,7 +1,6 @@
 
 package JuegoDeDamas;
 
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -42,7 +41,9 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	static BufferedImage crownImage = null;
 
 	public static void main(String[] args){
-		try {
+		
+            
+            try {
 			crownImage = ImageIO.read(new File("crown.png"));
 		} catch (IOException e) {
                     // Bloqueo autogenerado
@@ -81,13 +82,23 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		}
 		return gameOverInternal(col+1, row, cyan, white);
 	}
+        public class exampleBackground extends JFrame {
+    
+    JPanel jPanel = new JPanel();
+    JLabel jLabel = new JLabel();
+    
+   
+    
         
+        
+}
             
         
 	//Dibujar el JFrame y agregar la funcion de Salida
 	public void window(int width, int height, Damas game){ 
 		
                 JFrame background = new JFrame();
+                
                 background.setTitle("Juego de shovel Damas");
                 background.setVisible(true);
 		background.setSize(790, 537);
@@ -136,7 +147,8 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	    ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g.setColor(color);
-		// These 2 and 4 values are arbitrary values that compensate for a smaller piece size than tileSize
+		
+                // Estos valores 2 y 4 son valores arbitrarios que compensan un tamaño de pieza más pequeño
 		g.fillOval((col*tamañoMosaico)+2, (row*tamañoMosaico)+2, tamañoMosaico-4, tamañoMosaico-4);
 	}
 	
@@ -183,18 +195,26 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 			}
 		}
 		if(gameOver() == true)
-			gameOverDisplay(g);
-	}	
-	//Lanza el mensaje de game Over
-	public void gameOverDisplay(Graphics g) { 
+		
+                    
+                    pantallaGameOver();
+        
+        }
+            
+            
+        public void pantallaGameOver(){
+            JOptionPane.showInputDialog(null, "Quiere jugar de nuevo NOOB? ", "Perdio xddd", 1);
+            
+        //Lanza el mensaje de game Over
+	/*public void gameOverDisplay(Graphics g) { 
 		 String msg = "Game Over";
 	     Font small = new Font("Helvetica", Font.BOLD, 20);
 	     FontMetrics metr = getFontMetrics(small);
 	     g.setColor(Color.white);
 	     g.setFont(small);
-	     g.drawString(msg, (ancho - metr.stringWidth(msg)) / 2, ancho / 2);
+	     g.drawString(msg, (ancho - metr.stringWidth(msg)) / 2, ancho / 2);*/
 	}
-	
+	//gameOverDisplay(g);
         //metodo para resetear el Juego
 	public void resetPlay(){
 		storedCol = 0;
@@ -211,39 +231,51 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 	//metodo que detecta el click del mouse
         @Override
 	public void mousePressed(java.awt.event.MouseEvent evt) {
-    	int col = (evt.getX()-8) / tamañoMosaico; // 8 is left frame length
-        int row = (evt.getY()-30) / tamañoMosaico; // 30 is top frame length
+    	
+            // 8 es la longitud del marco izquierdo
+            int col = (evt.getX()-8) / tamañoMosaico; 
+        
+            // 30 es la longitud del marco superior
+            int row = (evt.getY()-30) / tamañoMosaico; 
 		if(inPlay == false && gameData[col][row] != 0 || inPlay == true && checkTeamPiece(col, row) == true){
 			resetPlay();
 			storedCol = col;
-			storedRow = row; // Sets the current click to instance variables to be used elsewhere
+			
+                        //Establece el clic actual en variables de instancia que se utilizarán en otros lugares
+                        storedRow = row;
 			getAvailablePlays(col, row);
 		}
 		else if(inPlay == true && availablePlays[col][row] == 1){
-			makeMove(col, row, storedCol, storedRow);
+			hacerMovimiento(col, row, storedCol, storedRow);
 		}
 		else if(inPlay == true && availablePlays[col][row] == 0){
 			resetPlay();
 		}
 	}
-	
-	public void swapPlayer(){
+	//funcion que nos permite cambiar entre el jugador 1 y el jugador 2
+	public void intercambiarPlayer(){
 		if(currentPlayer == RED)
 			currentPlayer = BLACK;
 		else currentPlayer = RED;
 	}
 	
-	public void makeMove(int col, int row, int storedCol, int storedRow){
-		int x = gameData[storedCol][storedRow]; //change the piece to new tile
+        //funcion que emula el movimiento de las fichas
+	public void hacerMovimiento(int col, int row, int storedCol, int storedRow){
+		
+                //cambia las piezas para un nueva teja
+                int x = gameData[storedCol][storedRow]; 
 		gameData[col][row] = x;
-		gameData[storedCol][storedRow] = EMPTY; //change old piece location to EMPTY
+		
+                //cambia la localizacion de la pieza antigua a un espacio vacio
+                gameData[storedCol][storedRow] = EMPTY; 
 		checkKing(col, row);
 		if(isJump == true)
 			removePiece(col, row, storedCol, storedRow);
 		resetPlay();
-		swapPlayer();
+		intercambiarPlayer();
 	}
 	
+        //funcion que detecta cuando una ficha se convierte en una ficha reina
 	public boolean isKing(int col, int row){
 		if(gameData[col][row] == RED_KING || gameData[col][row] == BLACK_KING){
 			return true;

@@ -28,5 +28,6 @@ public class exampleBackground extends JFrame {
         exampleBackground t = new exampleBackground();
         t.setVisible(true);
         
+        JOptionPane.showInputDialog(null, "This is a example" , "don´t forget to say him the truth", 1);
     }
 }
