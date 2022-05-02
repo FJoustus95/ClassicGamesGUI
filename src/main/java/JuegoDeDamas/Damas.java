@@ -197,22 +197,20 @@ public final class Damas extends JPanel implements ActionListener, MouseListener
 		if(gameOver() == true)
 		
                     
-                    pantallaGameOver();
+                    this.gameOverDisplay(g);
         
         }
             
             
-        public void pantallaGameOver(){
-            JOptionPane.showInputDialog(null, "Quiere jugar de nuevo NOOB? ", "Perdio xddd", 1);
-            
+        
         //Lanza el mensaje de game Over
-	/*public void gameOverDisplay(Graphics g) { 
+	public void gameOverDisplay(Graphics g) { 
 		 String msg = "Game Over";
-	     Font small = new Font("Helvetica", Font.BOLD, 20);
+	     Font small = new Font("Helvetica", Font.BOLD, 40);
 	     FontMetrics metr = getFontMetrics(small);
-	     g.setColor(Color.white);
+	     g.setColor(Color.black);
 	     g.setFont(small);
-	     g.drawString(msg, (ancho - metr.stringWidth(msg)) / 2, ancho / 2);*/
+	     g.drawString(msg, (ancho - metr.stringWidth(msg)) / 2, ancho / 2);
 	}
 	//gameOverDisplay(g);
         //metodo para resetear el Juego
